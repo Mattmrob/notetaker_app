@@ -3,7 +3,7 @@ const noteData = require('./db/db.json');
 const path = require('path');
 const uuid = require('./helpers/uuid')
 // const fs = require('fs');
-const { readFromFile, readAndAppend } = require('./helpers/fsUtils');
+const { readAndAppend } = require('./helpers/fsUtils');
 
 const PORT = 3001;
 
@@ -42,11 +42,6 @@ app.post('/api/notes', (req, res) => {
 
       readAndAppend(newNote, './db/db.json');
 
-    //   const noteString = JSON.stringify(newNote, null, 2);
-
-    //   fs.appendFile('./db/db.json', noteString, (err) =>
-    //   err ? console.log(err) : console.log('Data successfully Written to Json'));
-
       const response = {
         status: 'success',
         body: newNote,
@@ -59,6 +54,24 @@ app.post('/api/notes', (req, res) => {
       res.status(500).json('POST request failed? Oh no!');
     }
   });
+
+//   app.delete(`/api/notes/:id`, (req, res) => {
+//     if (req.params.id) {
+//         const noteId = req.params.id;
+
+//         for (let i = 0; i < noteData.length; i++) {
+//             const currentNote = noteData[i];
+//             const out = () => {
+//             noteData[i].splice(i - 1, 1);
+//             }
+//             if (noteId === currentNote.id) {
+//             out();
+//             }
+//         }
+//     } else {
+//         res.status(500).json('Delete request failed? Oh no!')
+//       }
+//   });
 
 app.listen(PORT, () =>
   console.log(`App listening at http://localhost:${PORT}`)

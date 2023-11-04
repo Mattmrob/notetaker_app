@@ -18,5 +18,10 @@
         "title": "22",
         "text": "33",
         "id": "05bd"
+    },
+    {
+        "title": "async test",
+        "text": "will it work?",
+        "id": "f838"
     }
 ]
