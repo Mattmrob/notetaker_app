@@ -1,5 +1,6 @@
 const express = require('express');
 const noteData = require('./db/db.json');
+const path = require('path');
 
 const PORT = 3001;
 
@@ -16,7 +17,7 @@ app.get('/', (req, res) =>
 );
 
 app.get('/notes', (req, res) =>
-  res.sendFile(path.join(__dirname, '/public/notes.html'))
+  res.sendFile(path.join(__dirname, '/public/pages/notes.html'))
 );
 
 
