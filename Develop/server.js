@@ -20,6 +20,16 @@ app.get('/notes', (req, res) =>
   res.sendFile(path.join(__dirname, '/public/pages/notes.html'))
 );
 
+app.get('/api/notes', (req, res) => {
+    res.status(200).json(noteData);
+});
+
+
+
+// app.post('/api/notes', (req, res) => 
+  
+// ); 
+
 
 app.listen(PORT, () =>
   console.log(`App listening at http://localhost:${PORT}`)
