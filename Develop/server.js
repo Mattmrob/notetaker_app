@@ -2,7 +2,8 @@ const express = require('express');
 const noteData = require('./db/db.json');
 const path = require('path');
 const uuid = require('./helpers/uuid')
-const fs = require('fs');
+// const fs = require('fs');
+const { readFromFile, readAndAppend } = require('./helpers/fsUtils');
 
 const PORT = 3001;
 
@@ -32,24 +33,32 @@ app.post('/api/notes', (req, res) => {
     const { title, text } = req.body;
   
     if (title && text) {
+
         const newNote = {
         title,
         text,
         id: uuid(),
       };
 
-      res.status(201).json(newNote);
+      readAndAppend(newNote, './db/db.json');
 
-          // fs.appendFile('./db/db.json', newNote, function (err) {
-    //     if (err) throw err;
-    //     console.log('Data Written');
-    // });
-    
+    //   const noteString = JSON.stringify(newNote, null, 2);
+
+    //   fs.appendFile('./db/db.json', noteString, (err) =>
+    //   err ? console.log(err) : console.log('Data successfully Written to Json'));
+
+      const response = {
+        status: 'success',
+        body: newNote,
+      };
+  
+      console.log(response);
+      res.status(201).json(response);
+
     } else {
-      res.status(500).json('POST request failed?');
+      res.status(500).json('POST request failed? Oh no!');
     }
   });
-
 
 app.listen(PORT, () =>
   console.log(`App listening at http://localhost:${PORT}`)
