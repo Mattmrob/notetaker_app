@@ -24,7 +24,7 @@ app.get('/notes', (req, res) =>
 );
 
 app.get('/api/notes', async (req, res) => {
-  try{
+  try {
     const data = await res.status(200).json(noteData);
   } catch (error) {
     res.status(500).json(error);
@@ -32,12 +32,14 @@ app.get('/api/notes', async (req, res) => {
 });
 
 app.post('/api/notes', async (req, res) => {
+  
+  try {
     console.log('Submission Received...');
 
     const { title, text } = req.body;
   
     if (title && text) {
-
+      
         const newNote = {
         title,
         text,
@@ -53,9 +55,10 @@ app.post('/api/notes', async (req, res) => {
   
       console.log(response);
       await res.status(201).json(response);
-
-    } else {
-      res.status(500).json('POST request failed? Oh no!');
+    }
+    
+    } catch (error) {
+      res.status(500).json(error);
     }
   });
 
