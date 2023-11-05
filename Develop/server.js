@@ -39,14 +39,14 @@ app.post('/api/notes', async (req, res) => {
     const { title, text } = req.body;
   
     if (title && text) {
-      
+
         const newNote = {
         title,
         text,
         id: uuid(),
       };
 
-      readAndAppend(newNote, './db/db.json');
+      await readAndAppend(newNote, './db/db.json');
 
       const response = {
         status: 'success',
@@ -54,7 +54,7 @@ app.post('/api/notes', async (req, res) => {
       };
   
       console.log(response);
-      await res.status(201).json(response);
+      res.status(201).json(response);
     }
     
     } catch (error) {
@@ -83,8 +83,6 @@ app.post('/api/notes', async (req, res) => {
         res.status(500).json('Delete request failed? Oh no!')
       }
   });
-
-
 
 app.listen(PORT, () =>
   console.log(`App listening at http://localhost:${PORT}`)
