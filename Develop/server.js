@@ -2,8 +2,8 @@ const express = require('express');
 const noteData = require('./db/db.json');
 const path = require('path');
 const uuid = require('./helpers/uuid')
-// const fs = require('fs');
-const { readAndAppend } = require('./helpers/fsUtils');
+const fs = require('fs');
+const { readAndAppend, writeToFile } = require('./helpers/fsUtils');
 
 const PORT = 3001;
 
@@ -23,11 +23,15 @@ app.get('/notes', (req, res) =>
   res.sendFile(path.join(__dirname, '/public/pages/notes.html'))
 );
 
-app.get('/api/notes', (req, res) => {
-    res.status(200).json(noteData);
+app.get('/api/notes', async (req, res) => {
+  try{
+    const data = await res.status(200).json(noteData);
+  } catch (error) {
+    res.status(500).json(error);
+  }
 });
 
-app.post('/api/notes', (req, res) => {
+app.post('/api/notes', async (req, res) => {
     console.log('Submission Received...');
 
     const { title, text } = req.body;
@@ -48,30 +52,36 @@ app.post('/api/notes', (req, res) => {
       };
   
       console.log(response);
-      res.status(201).json(response);
+      await res.status(201).json(response);
 
     } else {
       res.status(500).json('POST request failed? Oh no!');
     }
   });
 
-//   app.delete(`/api/notes/:id`, (req, res) => {
-//     if (req.params.id) {
-//         const noteId = req.params.id;
+  app.delete(`/api/notes/:id`, (req, res) => {
+    if (req.params.id) {
+        const selectedId = req.params.id;
+        const testArray = [];
+        
+         for (let i = 0; i < noteData.length; i++) {
+            
+              if (selectedId !== noteData[i].id) {
+              // code in here to delete the thing
+              testArray.push(noteData[i]);
+              } else {
+                console.log(`${noteData[i]} has been selected for deletion `)
+              }
+         }
 
-//         for (let i = 0; i < noteData.length; i++) {
-//             const currentNote = noteData[i];
-//             const out = () => {
-//             noteData[i].splice(i - 1, 1);
-//             }
-//             if (noteId === currentNote.id) {
-//             out();
-//             }
-//         }
-//     } else {
-//         res.status(500).json('Delete request failed? Oh no!')
-//       }
-//   });
+        writeToFile('./db/db.json', testArray)
+        res.status(200).json(noteData)
+    } else {
+        res.status(500).json('Delete request failed? Oh no!')
+      }
+  });
+
+
 
 app.listen(PORT, () =>
   console.log(`App listening at http://localhost:${PORT}`)
